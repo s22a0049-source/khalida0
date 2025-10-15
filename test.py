@@ -185,5 +185,30 @@ else:
         template="plotly_white"
     )
 
-    # --- DISPLAY PLOT IN STREAMLIT ---
+    st.plotly_chart(fig, use_container_width=True)
+
+
+required_cols = ["Gender", "H.S.C (GPA)"]
+missing_cols = [col for col in required_cols if col not in df.columns]
+
+if missing_cols:
+    st.warning(f"⚠️ Missing columns in dataset: {', '.join(missing_cols)}")
+else:
+    # --- CREATE PLOTLY BOXPLOT ---
+    fig = px.box(
+        df,
+        x="Gender",
+        y="H.S.C (GPA)",
+        color="Gender",
+        color_discrete_sequence=px.colors.qualitative.Set3,
+        points="all",  # shows individual data points
+        title="H.S.C GPA Distribution by Gender"
+    )
+
+    fig.update_layout(
+        xaxis_title="Gender",
+        yaxis_title="H.S.C GPA",
+        template="plotly_white"
+    )
+
     st.plotly_chart(fig, use_container_width=True)
