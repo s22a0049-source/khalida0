@@ -104,22 +104,33 @@ if 'Gender' in arts_faculty_df.columns:
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
 
-st.header("2. HSC GPA Distribution by Program")
+st.header("4. Average Semester Performance Trend")
 try:
-    if all(col in arts_faculty_df.columns for col in ['Program', 'HSC_GPA']):
-        # Clean up Program names if they are too specific
-        df_viz2 = arts_faculty_df.copy()
-        df_viz2['Program_Short'] = df_viz2['Program'].str.split(' in ').str[-1].fillna('Other')
+    sem_cols = [col for col in arts_faculty_df.columns if col.endswith('_Sem_1') or col.endswith('_Sem_2') or col.endswith('_Sem_3')]
+    
+    if sem_cols:
+        # Calculate the mean performance for each semester column
+        semester_averages = arts_faculty_df[sem_cols].mean().reset_index()
+        semester_averages.columns = ['Semester', 'Average_Score']
         
-        fig2 = px.box(
-            df_viz2,
-            x='Program_Short',
-            y='HSC_GPA',
-            color='Program_Short',
-            title='HSC GPA Distribution Across Arts Programs',
+        # Order the semesters logically for the line chart
+        semester_order = [
+            '1st_Sem_1', '1st_Sem_2', '1st_Sem_3', 
+            '2nd_Sem_1', '2nd_Sem_2', '2nd_Sem_3', 
+            '3rd_Sem_1', '3rd_Sem_2', '3rd_Sem_3', 
+            '4th_Sem_1', '4th_Sem_2', '4th_Sem_3'
+        ]
+        semester_averages['Semester'] = pd.Categorical(semester_averages['Semester'], categories=semester_order, ordered=True)
+        semester_averages = semester_averages.sort_values('Semester').dropna()
+        
+        fig4 = px.line(
+            semester_averages,
+            x='Semester',
+            y='Average_Score',
+            markers=True,
+            title='Average Performance Across All Semesters',
             template='plotly_white'
         )
-        fig2.update_layout(xaxis_title="Program", yaxis_title="HSC GPA")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig4, use_container_width=True)
 except Exception as e:
-    st.warning(f"Viz 2 Error: {e}")
+    st.warning(f"Viz 4 Error: {e}")
