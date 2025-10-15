@@ -104,17 +104,22 @@ if 'Gender' in arts_faculty_df.columns:
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
 
-st.header("3. Salary Distribution (Frequency)")
-
-if 'Salary' in arts_faculty_df.columns:
-    fig_hist = px.histogram(
-        arts_faculty_df,
-        x='Salary',
-        nbins=20, # Number of bins/buckets for salary ranges
-        title='Frequency of Faculty Salaries',
-        template='plotly_white',
-        marginal="box" # Show a box plot on the margin for quick stats
-    )
-    st.plotly_chart(fig_hist, use_container_width=True)
-else:
-    st.warning("Skipping Viz 3: 'Salary' column not found.")
+st.header("2. HSC GPA Distribution by Program")
+try:
+    if all(col in arts_faculty_df.columns for col in ['Program', 'HSC_GPA']):
+        # Clean up Program names if they are too specific
+        df_viz2 = arts_faculty_df.copy()
+        df_viz2['Program_Short'] = df_viz2['Program'].str.split(' in ').str[-1].fillna('Other')
+        
+        fig2 = px.box(
+            df_viz2,
+            x='Program_Short',
+            y='HSC_GPA',
+            color='Program_Short',
+            title='HSC GPA Distribution Across Arts Programs',
+            template='plotly_white'
+        )
+        fig2.update_layout(xaxis_title="Program", yaxis_title="HSC GPA")
+        st.plotly_chart(fig2, use_container_width=True)
+except Exception as e:
+    st.warning(f"Viz 2 Error: {e}")
