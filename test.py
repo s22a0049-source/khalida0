@@ -104,33 +104,11 @@ if 'Gender' in arts_faculty_df.columns:
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
 
-st.header("4. Average Semester Performance Trend")
-try:
-    sem_cols = [col for col in arts_faculty_df.columns if col.endswith('_Sem_1') or col.endswith('_Sem_2') or col.endswith('_Sem_3')]
-    
-    if sem_cols:
-        # Calculate the mean performance for each semester column
-        semester_averages = arts_faculty_df[sem_cols].mean().reset_index()
-        semester_averages.columns = ['Semester', 'Average_Score']
-        
-        # Order the semesters logically for the line chart
-        semester_order = [
-            '1st_Sem_1', '1st_Sem_2', '1st_Sem_3', 
-            '2nd_Sem_1', '2nd_Sem_2', '2nd_Sem_3', 
-            '3rd_Sem_1', '3rd_Sem_2', '3rd_Sem_3', 
-            '4th_Sem_1', '4th_Sem_2', '4th_Sem_3'
-        ]
-        semester_averages['Semester'] = pd.Categorical(semester_averages['Semester'], categories=semester_order, ordered=True)
-        semester_averages = semester_averages.sort_values('Semester').dropna()
-        
-        fig4 = px.line(
-            semester_averages,
-            x='Semester',
-            y='Average_Score',
-            markers=True,
-            title='Average Performance Across All Semesters',
-            template='plotly_white'
-        )
-        st.plotly_chart(fig4, use_container_width=True)
-except Exception as e:
-    st.warning(f"Viz 4 Error: {e}")
+
+# Study medium distribution
+plt.figure(figsize=(8,4))
+sns.countplot(data=df, x="H.S.C or Equivalent study medium", palette="coolwarm")
+plt.title("Distribution by Study Medium")
+plt.xlabel("Study Medium")
+plt.ylabel("Number of Students")
+plt.show()
