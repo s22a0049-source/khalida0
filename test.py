@@ -103,3 +103,21 @@ if 'Gender' in arts_faculty_df.columns:
     st.plotly_chart(fig_pie, use_container_width=True)
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
+
+st.header("2. Faculty Count by Department")
+
+if 'Department' in arts_faculty_df.columns:
+    dept_counts = arts_faculty_df['Department'].value_counts().reset_index()
+    dept_counts.columns = ['Department', 'Count']
+    
+    fig_bar = px.bar(
+        dept_counts,
+        x='Department',
+        y='Count',
+        title='Number of Faculty Members per Department',
+        color='Count', # Color the bars by count
+        template='plotly_white'
+    )
+    st.plotly_chart(fig_bar, use_container_width=True)
+else:
+    st.warning("Skipping Viz 2: 'Department' column not found.")
