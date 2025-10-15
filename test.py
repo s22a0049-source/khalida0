@@ -87,7 +87,7 @@ except KeyError:
 except Exception as e:
     st.error(f"An unexpected error occurred: {e}")
 
-st.header("1. Gender Distribution (Overall)")
+st.header("Gender Distribution (Overall)")
 
 if 'Gender' in arts_faculty_df.columns:
     gender_counts = arts_faculty_df['Gender'].value_counts().reset_index()
