@@ -195,3 +195,40 @@ else:
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
+program_cols = ['Engineering Program', 'Law Program', 'Business Program', 'Arts Program', 'Other Program']
+available_cols = [col for col in program_cols if col in df.columns]
+
+if not available_cols:
+    st.warning("⚠️ No program-related columns found in dataset. Please verify the column names.")
+else:
+    # --- MELT THE DATAFRAME ---
+    df_melted = df.melt(value_vars=available_cols, var_name='Program_Type', value_name='Program_Name')
+    df_melted = df_melted.dropna(subset=['Program_Name'])
+
+    # --- COUNT PROGRAM OCCURRENCES ---
+    program_counts = df_melted['Program_Name'].value_counts().reset_index()
+    program_counts.columns = ['Program_Name', 'Count']
+
+    # --- CREATE PLOTLY PIE CHART ---
+    fig = px.pie(
+        program_counts,
+        values='Count',
+        names='Program_Name',
+        color_discrete_sequence=px.colors.qualitative.Pastel,
+        title='Distribution of Students by Program',
+        hole=0.4  # makes it a donut chart (optional)
+    )
+
+    fig.update_traces(
+        textinfo='percent+label',
+        hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}"
+    )
+
+    fig.update_layout(
+        showlegend=True,
+        template='plotly_white'
+    )
+
+    # --- DISPLAY IN STREAMLIT ---
+    st.plotly_chart(fig, use_container_width=True)
