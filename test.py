@@ -125,7 +125,35 @@ if 'Gender' in df.columns:
         template="plotly_white"
     )
 
-    # --- DISPLAY CHART IN STREAMLIT ---
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.warning("⚠️ The dataset does not contain a 'Gender' column. Please check the CSV file.")
+
+
+column_name = "Bachelor  Academic Year in EU"
+if column_name in df.columns:
+    # --- COUNT OCCURRENCES ---
+    year_counts = df[column_name].value_counts().reset_index()
+    year_counts.columns = ["Academic Year", "Number of Students"]
+
+    # --- PLOTLY BAR CHART ---
+    fig = px.bar(
+        year_counts,
+        x="Academic Year",
+        y="Number of Students",
+        color="Academic Year",
+        text="Number of Students",
+        color_discrete_sequence=px.colors.sequential.Blues,
+        title="Bachelor Academic Year Distribution"
+    )
+
+    fig.update_traces(textposition="outside")
+    fig.update_layout(
+        xaxis_title="Academic Year",
+        yaxis_title="Number of Students",
+        template="plotly_white"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning(f"⚠️ Column '{column_name}' not found in dataset. Please check your CSV file.")
