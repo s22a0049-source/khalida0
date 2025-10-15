@@ -104,11 +104,3 @@ if 'Gender' in arts_faculty_df.columns:
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
 
-
-# Study medium distribution
-plt.figure(figsize=(8,4))
-sns.countplot(data=df, x="H.S.C or Equivalent study medium", palette="coolwarm")
-plt.title("Distribution by Study Medium")
-plt.xlabel("Study Medium")
-plt.ylabel("Number of Students")
-plt.show()
