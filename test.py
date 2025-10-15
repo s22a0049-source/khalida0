@@ -86,3 +86,20 @@ except KeyError:
     st.error("Error: The column 'Gender' was not found in the loaded data.")
 except Exception as e:
     st.error(f"An unexpected error occurred: {e}")
+
+st.header("1. Gender Distribution (Overall)")
+
+if 'Gender' in arts_faculty_df.columns:
+    gender_counts = arts_faculty_df['Gender'].value_counts().reset_index()
+    gender_counts.columns = ['Gender', 'Count'] 
+
+    fig_pie = px.pie(
+        gender_counts,
+        names='Gender',
+        values='Count',
+        title='Faculty Gender Distribution',
+        hole=0.4 # Donut chart
+    )
+    st.plotly_chart(fig_pie, use_container_width=True)
+else:
+    st.warning("Skipping Viz 1: 'Gender' column not found.")
