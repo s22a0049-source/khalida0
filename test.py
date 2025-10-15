@@ -104,3 +104,28 @@ if 'Gender' in arts_faculty_df.columns:
 else:
     st.warning("Skipping Viz 1: 'Gender' column not found.")
 
+if 'Gender' in df.columns:
+    gender_counts = df['Gender'].value_counts().reset_index()
+    gender_counts.columns = ['Gender', 'Count']
+
+    # --- PLOTLY BAR CHART ---
+    fig = px.bar(
+        gender_counts,
+        x='Gender',
+        y='Count',
+        color='Gender',
+        text='Count',
+        color_discrete_sequence=px.colors.qualitative.Set2,
+        title='Distribution of Gender in Arts Faculty'
+    )
+    fig.update_traces(textposition='outside')
+    fig.update_layout(
+        xaxis_title="Gender",
+        yaxis_title="Count",
+        template="plotly_white"
+    )
+
+    # --- DISPLAY CHART IN STREAMLIT ---
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning("⚠️ The dataset does not contain a 'Gender' column. Please check the CSV file.")
