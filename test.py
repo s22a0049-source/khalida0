@@ -157,3 +157,33 @@ if column_name in df.columns:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.warning(f"⚠️ Column '{column_name}' not found in dataset. Please check your CSV file.")
+
+
+required_cols = ["S.S.C (GPA)", "H.S.C (GPA)", "Gender"]
+missing_cols = [col for col in required_cols if col not in df.columns]
+
+if missing_cols:
+    st.warning(f"⚠️ Missing columns in dataset: {', '.join(missing_cols)}")
+else:
+    # --- CREATE PLOTLY SCATTER PLOT ---
+    fig = px.scatter(
+        df,
+        x="S.S.C (GPA)",
+        y="H.S.C (GPA)",
+        color="Gender",
+        trendline="ols",  # optional: adds regression line
+        symbol="Gender",
+        size_max=10,
+        color_discrete_sequence=px.colors.qualitative.Set2,
+        title="S.S.C vs H.S.C GPA by Gender",
+        hover_data=["Gender"]
+    )
+
+    fig.update_layout(
+        xaxis_title="S.S.C GPA",
+        yaxis_title="H.S.C GPA",
+        template="plotly_white"
+    )
+
+    # --- DISPLAY PLOT IN STREAMLIT ---
+    st.plotly_chart(fig, use_container_width=True)
